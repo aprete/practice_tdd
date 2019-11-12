@@ -2,98 +2,171 @@ package mars_rover;
 
 public class Rover {
 
-    private String direction;
+    private Direction direction;
     private int y;
     private int x;
 
-    public Rover(int x, int y, String direction) {
-        this.direction = direction;
+    public Rover(final int x, final int y, final String direction) {
+        this.direction = Direction.create(direction);
         this.y = y;
         this.x = x;
     }
 
-    public void receive(String commandsSequence) {
+    public void receive(final String commandsSequence) {
         for (int i = 0; i < commandsSequence.length(); ++i) {
             String command = commandsSequence.substring(i, i + 1);
 
-            if (command.equals("l") || command.equals("r")) {
-
-                // Rotate Rover
-                if (direction.equals("N")) {
-                    if (command.equals("r")) {
-                        direction = "E";
-                    } else {
-                        direction = "W";
-                    }
-                } else if (direction.equals("S")) {
-                    if (command.equals("r")) {
-                        direction = "W";
-                    } else {
-                        direction = "E";
-                    }
-                } else if (direction.equals("W")) {
-                    if (command.equals("r")) {
-                        direction = "N";
-                    } else {
-                        direction = "S";
-                    }
-                } else {
-                    if (command.equals("r")) {
-                        direction = "S";
-                    } else {
-                        direction = "N";
-                    }
-                }
-            } else {
-
-                // Displace Rover
-                int displacement1 = -1;
-
-                if (command.equals("f")) {
-                    displacement1 = 1;
-                }
-                int displacement = displacement1;
-
-                if (direction.equals("N")) {
-                    y += displacement;
-                } else if (direction.equals("S")) {
-                    y -= displacement;
-                } else if (direction.equals("W")) {
-                    x -= displacement;
-                } else {
-                    x += displacement;
-                }
+            if (command.equals("l"))
+            {
+                rotateLeft();
+            }
+            if (command.equals("r"))
+            {
+                rotateRight();
+            }
+            if (command.equals("f"))
+            {
+                moveForwards();
+            }
+            if (command.equals("b"))
+            {
+                moveBackwards();
             }
         }
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    private void rotateLeft()
+    {
+        if (faceNorth())
+        {
+            this.direction = Direction.W;
+        }
+        else if (faceSouth())
+        {
+            this.direction = Direction.E;
+        }
+        else if (faceWest())
+        {
+            this.direction = Direction.S;
+        }
+        else
+        {
+            this.direction = Direction.N;
+        }
+    }
 
-        Rover rover = (Rover) o;
+    private void rotateRight()
+    {
+        if (faceNorth())
+        {
+            this.direction = Direction.E;
+        }
+        else if (faceSouth())
+        {
+            this.direction = Direction.W;
+        }
+        else if (faceWest())
+        {
+            this.direction = Direction.N;
+        }
+        else
+        {
+            this.direction = Direction.S;
+        }
+    }
 
-        if (y != rover.y) return false;
-        if (x != rover.x) return false;
-        return direction != null ? direction.equals(rover.direction) : rover.direction == null;
+    private void moveForwards()
+    {
+        int displacement = 1;
+        move(displacement);
+    }
 
+    private void moveBackwards()
+    {
+        int displacement = -1;
+        move(displacement);
+    }
+
+    private void move(final int displacement)
+    {
+        if (faceNorth())
+        {
+            y += displacement;
+        }
+        else if (faceSouth())
+        {
+            y -= displacement;
+        }
+        else if (faceWest())
+        {
+            x -= displacement;
+        }
+        else
+        {
+            x += displacement;
+        }
+    }
+
+    private boolean faceWest()
+    {
+        return direction.equals(Direction.W);
+    }
+
+    private boolean faceSouth()
+    {
+        return direction.equals(Direction.S);
+    }
+
+    private boolean faceNorth()
+    {
+        return direction.equals(Direction.N);
     }
 
     @Override
-    public int hashCode() {
-        int result = direction != null ? direction.hashCode() : 0;
-        result = 31 * result + y;
-        result = 31 * result + x;
+    public String toString()
+    {
+        return "Rover [directionType=" + direction + ", y=" + y + ", x=" + x + "]";
+    }
+
+    @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (direction == null ? 0 : direction.hashCode());
+        result = prime * result + x;
+        result = prime * result + y;
         return result;
     }
 
     @Override
-    public String toString() {
-        return "Rover{" +
-            "direction='" + direction + '\'' +
-            ", y=" + y +
-            ", x=" + x +
-            '}';
+    public boolean equals(final Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (obj == null)
+        {
+            return false;
+        }
+        if (getClass() != obj.getClass())
+        {
+            return false;
+        }
+        Rover other = (Rover) obj;
+        if (direction != other.direction)
+        {
+            return false;
+        }
+        if (x != other.x)
+        {
+            return false;
+        }
+        if (y != other.y)
+        {
+            return false;
+        }
+        return true;
     }
 }
