@@ -1,15 +1,15 @@
 package mars_rover;
 
+import java.util.Objects;
+
 public class Rover {
 
     private Direction direction;
-    private int y;
-    private int x;
+    private Coordinates coordinates;
 
     public Rover(final int x, final int y, final String direction) {
         this.direction = Direction.create(direction);
-        this.y = y;
-        this.x = x;
+        this.coordinates = new Coordinates(x, y);
     }
 
     public void receive(final String commandsSequence) {
@@ -37,42 +37,12 @@ public class Rover {
 
     private void rotateLeft()
     {
-        if (faceNorth())
-        {
-            this.direction = Direction.W;
-        }
-        else if (faceSouth())
-        {
-            this.direction = Direction.E;
-        }
-        else if (faceWest())
-        {
-            this.direction = Direction.S;
-        }
-        else
-        {
-            this.direction = Direction.N;
-        }
+        this.direction = direction.rotateLeft();
     }
 
     private void rotateRight()
     {
-        if (faceNorth())
-        {
-            this.direction = Direction.E;
-        }
-        else if (faceSouth())
-        {
-            this.direction = Direction.W;
-        }
-        else if (faceWest())
-        {
-            this.direction = Direction.N;
-        }
-        else
-        {
-            this.direction = Direction.S;
-        }
+        this.direction = direction.rotateRight();
     }
 
     private void moveForwards()
@@ -91,19 +61,19 @@ public class Rover {
     {
         if (faceNorth())
         {
-            y += displacement;
+            this.coordinates = new Coordinates(coordinates.x(), coordinates.y() + displacement);
         }
         else if (faceSouth())
         {
-            y -= displacement;
+            this.coordinates = new Coordinates(coordinates.x(), coordinates.y() - displacement);
         }
         else if (faceWest())
         {
-            x -= displacement;
+            this.coordinates = new Coordinates(coordinates.x() - displacement, coordinates.y());
         }
         else
         {
-            x += displacement;
+            this.coordinates = new Coordinates(coordinates.x() + displacement, coordinates.y());
         }
     }
 
@@ -123,50 +93,24 @@ public class Rover {
     }
 
     @Override
-    public String toString()
-    {
-        return "Rover [directionType=" + direction + ", y=" + y + ", x=" + x + "]";
+    public String toString() {
+        return "Rover{" +
+                "direction=" + direction +
+                ", coordinates=" + coordinates +
+                '}';
     }
 
     @Override
-    public int hashCode()
-    {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (direction == null ? 0 : direction.hashCode());
-        result = prime * result + x;
-        result = prime * result + y;
-        return result;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Rover rover = (Rover) o;
+        return direction == rover.direction &&
+                Objects.equals(coordinates, rover.coordinates);
     }
 
     @Override
-    public boolean equals(final Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (obj == null)
-        {
-            return false;
-        }
-        if (getClass() != obj.getClass())
-        {
-            return false;
-        }
-        Rover other = (Rover) obj;
-        if (direction != other.direction)
-        {
-            return false;
-        }
-        if (x != other.x)
-        {
-            return false;
-        }
-        if (y != other.y)
-        {
-            return false;
-        }
-        return true;
+    public int hashCode() {
+        return Objects.hash(direction, coordinates);
     }
 }
