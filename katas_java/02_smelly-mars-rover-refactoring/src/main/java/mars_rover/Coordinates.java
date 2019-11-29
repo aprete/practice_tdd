@@ -6,15 +6,31 @@ public class Coordinates {
     private final int x;
     private final int y;
 
-    public Coordinates(int x, int y) {
+    public Coordinates(final int x, final int y) {
         this.x = x;
         this.y = y;
     }
 
+    public Coordinates moveAlongY(final int displacement)
+    {
+        return new Coordinates(x, y + displacement);
+    }
+
+    public Coordinates moveAlongX(final int displacement)
+    {
+        return new Coordinates(x + displacement, y);
+    }
+
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(final Object o) {
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass())
+        {
+            return false;
+        }
         Coordinates that = (Coordinates) o;
         return x == that.x &&
                 y == that.y;
@@ -31,13 +47,5 @@ public class Coordinates {
                 "x=" + x +
                 ", y=" + y +
                 '}';
-    }
-
-    public int y() {
-        return y;
-    }
-
-    public int x() {
-        return x;
     }
 }

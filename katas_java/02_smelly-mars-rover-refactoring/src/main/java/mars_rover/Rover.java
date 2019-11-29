@@ -5,7 +5,7 @@ import java.util.Objects;
 public class Rover {
 
     private Direction direction;
-    private Coordinates coordinates;
+    Coordinates coordinates;
 
     public Rover(final int x, final int y, final String direction) {
         this.direction = Direction.create(direction);
@@ -61,19 +61,19 @@ public class Rover {
     {
         if (faceNorth())
         {
-            this.coordinates = new Coordinates(coordinates.x(), coordinates.y() + displacement);
+            coordinates = coordinates.moveAlongY(displacement);
         }
         else if (faceSouth())
         {
-            this.coordinates = new Coordinates(coordinates.x(), coordinates.y() - displacement);
+            coordinates = coordinates.moveAlongY(-displacement);
         }
         else if (faceWest())
         {
-            this.coordinates = new Coordinates(coordinates.x() - displacement, coordinates.y());
+            coordinates = coordinates.moveAlongX(-displacement);
         }
         else
         {
-            this.coordinates = new Coordinates(coordinates.x() + displacement, coordinates.y());
+            coordinates = coordinates.moveAlongX(displacement);
         }
     }
 
@@ -101,9 +101,15 @@ public class Rover {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(final Object o) {
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass())
+        {
+            return false;
+        }
         Rover rover = (Rover) o;
         return direction == rover.direction &&
                 Objects.equals(coordinates, rover.coordinates);
