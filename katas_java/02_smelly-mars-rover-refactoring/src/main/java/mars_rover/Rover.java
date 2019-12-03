@@ -2,106 +2,60 @@ package mars_rover;
 
 import java.util.Objects;
 
-public class Rover {
+public class Rover
+{
+
+    private static final int DISPLACEMENT = 1;
 
     private Direction direction;
+
     Coordinates coordinates;
 
-    public Rover(final int x, final int y, final String direction) {
+    public Rover(final int x, final int y, final String direction)
+    {
         this.direction = Direction.create(direction);
         this.coordinates = new Coordinates(x, y);
     }
 
-    public void receive(final String commandsSequence) {
-        for (int i = 0; i < commandsSequence.length(); ++i) {
+    public void receive(final String commandsSequence)
+    {
+        for (int i = 0; i < commandsSequence.length(); ++i)
+        {
             String command = commandsSequence.substring(i, i + 1);
 
-            if (command.equals("l"))
-            {
-                rotateLeft();
-            }
-            if (command.equals("r"))
-            {
-                rotateRight();
-            }
-            if (command.equals("f"))
-            {
-                moveForwards();
-            }
-            if (command.equals("b"))
-            {
-                moveBackwards();
-            }
+            execute(command);
         }
     }
 
-    private void rotateLeft()
+    public void execute(String command)
     {
-        this.direction = direction.rotateLeft();
-    }
-
-    private void rotateRight()
-    {
-        this.direction = direction.rotateRight();
-    }
-
-    private void moveForwards()
-    {
-        int displacement = 1;
-        move(displacement);
-    }
-
-    private void moveBackwards()
-    {
-        int displacement = -1;
-        move(displacement);
-    }
-
-    private void move(final int displacement)
-    {
-        if (faceNorth())
+        if (command.equals("l"))
         {
-            coordinates = coordinates.moveAlongY(displacement);
+            this.direction = direction.rotateLeft();
         }
-        else if (faceSouth())
+        if (command.equals("r"))
         {
-            coordinates = coordinates.moveAlongY(-displacement);
+            this.direction = direction.rotateRight();
         }
-        else if (faceWest())
+        if (command.equals("f"))
         {
-            coordinates = coordinates.moveAlongX(-displacement);
+            coordinates = direction.move(coordinates, DISPLACEMENT);
         }
-        else
+        if (command.equals("b"))
         {
-            coordinates = coordinates.moveAlongX(displacement);
+            coordinates = direction.move(coordinates, -DISPLACEMENT);
         }
-    }
-
-    private boolean faceWest()
-    {
-        return direction.equals(Direction.W);
-    }
-
-    private boolean faceSouth()
-    {
-        return direction.equals(Direction.S);
-    }
-
-    private boolean faceNorth()
-    {
-        return direction.equals(Direction.N);
     }
 
     @Override
-    public String toString() {
-        return "Rover{" +
-                "direction=" + direction +
-                ", coordinates=" + coordinates +
-                '}';
+    public String toString()
+    {
+        return "Rover{" + "direction=" + direction + ", coordinates=" + coordinates + '}';
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(final Object o)
+    {
         if (this == o)
         {
             return true;
@@ -111,12 +65,12 @@ public class Rover {
             return false;
         }
         Rover rover = (Rover) o;
-        return direction == rover.direction &&
-                Objects.equals(coordinates, rover.coordinates);
+        return direction == rover.direction && Objects.equals(coordinates, rover.coordinates);
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return Objects.hash(direction, coordinates);
     }
 }
